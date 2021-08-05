@@ -14,14 +14,17 @@ public class MainManager : MonoBehaviour
     public GameObject GameOverText;
     
     private bool m_Started = false;
-    private int m_Points;
+    public  int m_Points;
     
     private bool m_GameOver = false;
 
+    UIManager uIManager;
     
     // Start is called before the first frame update
     void Start()
     {
+        uIManager = GameObject.FindGameObjectWithTag("Manager").GetComponent<UIManager>();
+        uIManager.BestScore();
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
@@ -57,7 +60,7 @@ public class MainManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                SceneManager.LoadScene(0,LoadSceneMode.Single);
             }
         }
     }
@@ -70,6 +73,8 @@ public class MainManager : MonoBehaviour
 
     public void GameOver()
     {
+        uIManager.HighScore = Mathf.Max(uIManager.HighScore,m_Points);
+        uIManager.Rewrite();
         m_GameOver = true;
         GameOverText.SetActive(true);
     }
